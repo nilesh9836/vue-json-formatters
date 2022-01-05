@@ -144,6 +144,6 @@ export default {
 }
 .btn-card {
   height: 90vh;
-  background-color: black;
+  background-color: rgb(255, 254, 254);
 }
 </style>
