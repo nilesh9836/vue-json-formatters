@@ -1,5 +1,8 @@
 # vue-json-formatter
+```
+This will help user to format their copied json text and beautify it.
 
+```
 ## Project setup
 ```
 npm install
