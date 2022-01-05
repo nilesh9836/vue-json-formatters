@@ -1,8 +1,6 @@
 <template>
-  <v-container>
-    <v-row class="text-center">
-     <jsonFormatter :data="data"></jsonFormatter>
-    </v-row>
+  <v-container class="pa-0 ma-0 pa-4" fluid style="background-color: violet;">
+     <jsonFormatter></jsonFormatter>
   </v-container>
 </template>
 

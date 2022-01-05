@@ -1,25 +1,53 @@
 <template>
-  <div class="pt-4" style="min-width:1000px;max-width:1000px:min-height:500px" :key="compkey">
-
-      <v-card class="mb-4">
-        <codemirror
+  <v-container class="pa-0 ma-0" fluid>
+   <v-row no-gutters>
+     <v-col cols="5">
+       <v-card>
+         <codemirror
           class="code-mirror"
           autofocus
-          :value="getFormattedJson(data)"
           :options="codeMirrorOption"
           v-model="modelValue"
-          @input="changeInput()"
         ></codemirror>
-      </v-card>
-    <v-row>
-  </v-row>
-  </div>
-
+       </v-card>
+     </v-col>
+     <v-col class="px-4">
+       <v-card class="btn-card pa-4">
+        <v-row justify="center" no-gutters>
+        <v-btn @click="getFormattedJson(modelValue)" outlined color="primary"  >Format</v-btn>
+       </v-row>
+       <v-row justify="center" no-gutters class="pa-9">
+         <v-select
+          hide-details
+          dense
+          label="Tab Space"
+          :items="items"
+          outlined
+          v-model="tabValue"
+        ></v-select>
+       </v-row>
+       </v-card>
+     </v-col>
+     <v-col cols="5">
+       <v-card>
+       <codemirror
+          ref="codeMirrorFormated"
+          :key="compKey"
+          class="code-mirror"
+          autofocus
+          :options="codeMirrorOption"
+          :value="data"
+        ></codemirror>
+       </v-card>
+     </v-col>
+   </v-row>
+  </v-container>
 </template>
 
 <script>
 import { codemirror } from "vue-codemirror";
 import "codemirror/mode/javascript/javascript.js";
+import "codemirror/addon/display/fullscreen.js";
 import "codemirror/theme/solarized.css";
 import "codemirror/addon/fold/foldgutter.css";
 import "codemirror/addon/fold/brace-fold.js";
@@ -38,12 +66,25 @@ export default {
   },
   methods: {
     getFormattedJson(val) {
-      this.modelValue = JSON.stringify(val, null, 2);
-      //this.compkey++;
+      try{
+      this.data = JSON.stringify(JSON.parse(val), null, this.tabValue);
+      }
+      catch(err)
+      {
+        this.data = err.message;
+      }
     },
     changeInput() {
       this.data = JSON.parse(this.modelValue);
       this.compkey++;
+    },
+    copy() {
+      console.log('copy');
+      this.$refs.codeMirrorFormated.text.select();
+      document.execCommand("copy");
+    },
+    toggle() {
+      this.fullscreen = !this.fullscreen
     }
   },
   watch: {
@@ -58,7 +99,10 @@ export default {
   },
   data() {
     return {
+      fullscreen: false,
       compkey: 0,
+      tabValue: 2,
+      items: [2,3,4],
       modelValue: "",
       codeMirrorOption: {
         mode: "application/ld+json",
@@ -73,6 +117,7 @@ export default {
         autoCloseBrackets: true,
         matchBrackets: true,
         lint: true,
+        fullScreen: false,
       },
     };
   },
@@ -95,6 +140,10 @@ export default {
   text-align: left;
 }
 /deep/ .CodeMirror {
-  height: 75vh;
+  height: 90vh;
+}
+.btn-card {
+  height: 90vh;
+  background-color: black;
 }
 </style>
